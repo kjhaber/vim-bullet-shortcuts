@@ -33,6 +33,14 @@ function! s:BulletToggle()
 endfunction
 command! -range BulletToggle <line1>,<line2>call <SID>BulletToggle()
 
+" For some reason I haven't been able to figure out, there is a delay when the
+" <leader>bb mappings call BulletToggle directly.  Adding this extra indirection
+" makes the leader mapping action take effect immediately.
+function! s:BulletToggleNow()
+  BulletToggle
+endfunction
+command! -range BulletToggleNow <line1>,<line2>call <SID>BulletToggleNow()
+
 " Command for indenting the current line and toggling the current bullet
 " character
 function! s:BulletToggleIndent()
@@ -79,12 +87,12 @@ if g:vim_bullet_shortcuts_map_keys
   nmap <silent> <Leader>b> <Plug>BulletChangeGt
   vmap <silent> <Leader>b> <Plug>BulletChangeGt
 
-  nmap <silent> <Plug>BulletToggle :BulletToggle<CR>
+  nmap <silent> <Plug>BulletToggleNow :BulletToggleNow<CR>
+        \:call repeat#set("\<lt>Plug>BulletToggleNow")<CR>
+  vmap <silent> <Plug>BulletToggleNow :'<,'>BulletToggleNow<CR>
         \:call repeat#set("\<lt>Plug>BulletToggle")<CR>
-  vmap <silent> <Plug>BulletToggle :'<,'>BulletToggle<CR>
-        \:call repeat#set("\<lt>Plug>BulletToggle")<CR>
-  nmap <silent> <Leader>bb <Plug>BulletToggle
-  vmap <silent> <Leader>bb <Plug>BulletToggle
+  nmap <silent> <Leader>bb <Plug>BulletToggleNow
+  vmap <silent> <Leader>bb <Plug>BulletToggleNow
 
   nmap <silent> <Plug>BulletToggleIndent :BulletToggleIndent<CR>
         \:call repeat#set("\<lt>Plug>BulletToggleIndent")<CR>
